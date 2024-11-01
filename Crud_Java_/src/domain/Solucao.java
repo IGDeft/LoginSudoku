@@ -1,5 +1,5 @@
 
-package VIEW;
+package domain;
 
 import java.util.Random;
 

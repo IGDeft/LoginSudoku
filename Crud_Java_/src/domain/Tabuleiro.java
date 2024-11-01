@@ -1,6 +1,7 @@
 
-package VIEW;
+package domain;
 
+import domain.Solucao;
 import java.util.ArrayList;
 import java.util.Random;
 

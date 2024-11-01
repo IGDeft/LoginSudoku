@@ -1,5 +1,6 @@
 package VIEW;
 
+import domain.Tabuleiro;
 import DAO.UsuarioDAO;
 import DTO.UsuarioDTO;
 import java.sql.SQLException;
