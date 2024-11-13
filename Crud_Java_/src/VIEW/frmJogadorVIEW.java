@@ -6,6 +6,7 @@ package VIEW;
 
 import DAO.JogadorDAO;
 import DTO.JogadorDTO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -87,12 +88,19 @@ public class frmJogadorVIEW extends javax.swing.JFrame {
         login = txtLogin.getText();
         senha = txtSenha.getText();
         
+        if(login.isEmpty() || senha.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos. ");
+            return;
+        }
+        
         JogadorDTO objjogadordto = new JogadorDTO();
         objjogadordto.setLogin_jogador(login);
         objjogadordto.setSenha_usuario(senha);
         
         JogadorDAO objjogadordao = new JogadorDAO();
         objjogadordao.cadastrarLogin(objjogadordto);
+        JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+        dispose();
         
         
     }//GEN-LAST:event_btnCadastrarActionPerformed

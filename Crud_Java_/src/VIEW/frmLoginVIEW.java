@@ -1,5 +1,6 @@
 package VIEW;
 
+import DAO.JogadorDAO;
 import domain.Tabuleiro;
 import DAO.UsuarioDAO;
 import DTO.UsuarioDTO;
@@ -129,80 +130,48 @@ public class frmLoginVIEW extends javax.swing.JFrame {
 
             UsuarioDAO objusuariodao = new UsuarioDAO();
             ResultSet rsusuariodao = objusuariodao.autenticacaoUsuario(objusuariodto);
+            dispose();
 
             if (rsusuariodao.next()) {
+            // Configuração do jogo no modo ultra fácil
+            Tabuleiro tabuleiroJogador = new Tabuleiro();
+            tabuleiroJogador.setNivel(1); // Define qualquer nível, pois o tabuleiro estará praticamente completo
+            
+            int pontuacao = 0; // Inicia a pontuação
+            int[][] tabuleiro = tabuleiroJogador.mostrarNumero(); // Prepara o tabuleiro com uma célula vazia
+            tabuleiroJogador.imprimirTabuleiro(); // Exibe o tabuleiro inicial
 
-                Tabuleiro tabuleiroJogador = new Tabuleiro();
-                Scanner input = new Scanner(System.in);
-                int nivel = 0;
-                System.out.println("ESCOLHA O NÍVEL - 1. FÁCIL | 2. MÉDIO | 3. DIFÍCIL | 4. MESTRE");
+            int linha = 8; // A última linha da célula vazia
+            int coluna = 8; // A última coluna da célula vazia
+            int numero; // Número que o jogador precisa digitar para resolver o jogo
+            Scanner input = new Scanner(System.in);
 
-                do {
-                    nivel = input.nextInt();
-                } while (nivel <= 0 || nivel > 4);
-                System.out.println();
-                tabuleiroJogador.setNivel(nivel);
-                int pontuacao = 0;
-                int[][] tabuleiro = tabuleiroJogador.mostrarNumero();
-                tabuleiroJogador.imprimirTabuleiro();
-                int linha, coluna, numero, erros = 0, acertos = 0, dica;
-                do {
+            System.out.println("Digite o número para resolver o jogo:");
+            numero = input.nextInt(); // Captura a entrada do jogador para a última célula
 
-                    System.out.println("Gostaria de uma dica? 1.SIM 2.NÃO");
-                    dica = input.nextInt();
-                     System.out.println();
-                    if (dica == 1) {
-                        tabuleiroJogador.getDicas();
-                        acertos = 0;
-                        tabuleiroJogador.imprimirTabuleiro();
-                    }
+            tabuleiroJogador.setNumero(numero); // Define o número que o jogador digitou
 
-                    do {
-                        do {
-                            System.out.println("Escreva uma linha: ");
-                            linha = input.nextInt();
-                        } while (linha < 1 || linha > 9);
-                        --linha;
-                        do {
-                            System.out.println("Escreva uma coluna: ");
-                            coluna = input.nextInt();
-                        } while (coluna < 1 || coluna > 9);
-                        --coluna;
-                        do {
-                            System.out.println("Escreva um número: ");
-                            numero = input.nextInt();
-                        } while (numero < 1 || numero > 9);
-                        if (tabuleiro[linha][coluna] != 0) {
-                            System.out.println("Posição inválida");
-                        }
-                    } while (tabuleiro[linha][coluna] != 0);
-                    tabuleiroJogador.setNumero(numero);
-                    if (tabuleiroJogador.realizarJogada(linha, coluna)) {
-                        tabuleiro[linha][coluna] = numero;
-                        pontuacao = pontuacao(nivel, acertos, pontuacao);
-                        acertos++;
-                    } else {
-                        erros++;
-                        acertos = 0;
-                    }
-                    System.out.println("Pontuação: " + pontuacao);
-                    System.out.println("Erros: " + erros);
-                    System.out.println();
-                    tabuleiroJogador.imprimirTabuleiro();
-                    if (tabuleiroJogador.concluido()) {
-                        System.out.println("Jogo concluído, digite -1 para sair");
-                        numero = input.nextInt();
-                    }
-                } while (numero != -1);
+            // Verifica se a jogada é correta e atualiza a pontuação
+            if (tabuleiroJogador.realizarJogada(linha, coluna)) {
+                tabuleiro[linha][coluna] = numero; // Preenche a célula final
+                pontuacao = pontuacao(1, 1, pontuacao); // Atualiza a pontuação para teste
+                System.out.println("Pontuação final: " + pontuacao);
 
-            } else {
-                //enviar mensagem dizendo incorreto.
-                JOptionPane.showMessageDialog(null, "Usuário ou senha inválida");
+                // Atualiza a pontuação no banco de dados
+                JogadorDAO objJogadorDAO = new JogadorDAO();
+                objJogadorDAO.atualizarPontuacao(nome_usuario, pontuacao);
+
+                // Mensagem final
+                JOptionPane.showMessageDialog(this, "Parabéns! Sua pontuação final é: " + pontuacao);
             }
 
-        } catch (SQLException erro) {
-            JOptionPane.showMessageDialog(null, "FRMLOGINVIEW" + erro);
+        } else {
+            JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
         }
-    }
 
+    } catch (SQLException erro) {
+        JOptionPane.showMessageDialog(null, "FRMLOGINVIEW" + erro);
+    }
+}
+    
 }
