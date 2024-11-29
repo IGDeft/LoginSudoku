@@ -1,7 +1,6 @@
 
 package domain;
 
-import domain.Solucao;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,9 +11,12 @@ public class Tabuleiro {
     private int nivel;
     private int numero; 
     //inserir tempo
-    
+
     public int[][] getTabuleiro() {
         return this.tabuleiroSolucao;
+    }
+    public int getTabuleiro(int lin, int col) {
+        return this.tabuleiroSolucao[lin][col];
     }
     public int getNivel() {
         switch(this.nivel){
@@ -24,8 +26,11 @@ public class Tabuleiro {
             case 2 -> { 
                 return 33;
             }
-            case 3, 4 -> {
+            case 3 -> {
                 return 28;
+            }
+            case 4 -> {
+                return 27;
             }
             default -> {
                 return 0;

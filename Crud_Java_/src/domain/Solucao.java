@@ -80,6 +80,7 @@ public class Solucao {
         }
         return true;
     }
+
     //regras Sudoku
     private static boolean posicaoValida(int[][] tab, int num, int lin, int col) {
         return !possuiNumLinha(tab, num, lin) && !possuiNumColuna(tab, num, col) && !possuiNumQuadrado(tab, num, lin, col);
