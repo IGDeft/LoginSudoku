@@ -1,13 +1,11 @@
 package VIEW;
 
-import DAO.JogadorDAO;
-import domain.Tabuleiro;
 import DAO.UsuarioDAO;
 import DTO.UsuarioDTO;
+import View.InterfaceGrafica;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
-import java.util.Scanner;
 
 public class frmLoginVIEW extends javax.swing.JFrame {
 
@@ -76,38 +74,37 @@ public class frmLoginVIEW extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEntrarActionPerformed
 
-    public static void main(String args[]) {
+  public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(frmJogadorVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(frmJogadorVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(frmJogadorVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(frmJogadorVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new frmLoginVIEW().setVisible(true);
+                
             }
         });
-    }
-
-    public static int pontuacao(int nivel, int acertos, int pontuacao) {
-        switch (nivel) {
-            case 1 -> {
-                pontuacao += 200 + (acertos * 10);
-                return pontuacao;
-            }
-            case 2 -> {
-                pontuacao += 250 + (acertos * 13);
-                return pontuacao;
-
-            }
-            case 3 -> {
-                pontuacao += 300 + (acertos * 17);
-                return pontuacao;
-            }
-            case 4 -> {
-                pontuacao += 350 + (acertos * 20);
-                return pontuacao;
-            }
-            default -> {
-                return 0;
-            }
-        }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntrar;
@@ -133,38 +130,10 @@ public class frmLoginVIEW extends javax.swing.JFrame {
             dispose();
 
             if (rsusuariodao.next()) {
-            // Configuração do jogo no modo ultra fácil
-            Tabuleiro tabuleiroJogador = new Tabuleiro();
-            tabuleiroJogador.setNivel(1); // Define qualquer nível, pois o tabuleiro estará praticamente completo
+                InterfaceGrafica tela = new InterfaceGrafica();
+                tela.nomeUsuario(txtNomeUsuario.getText());
+                tela.setVisible(true);                
             
-            int pontuacao = 0; // Inicia a pontuação
-            int[][] tabuleiro = tabuleiroJogador.mostrarNumero(); // Prepara o tabuleiro com uma célula vazia
-            tabuleiroJogador.imprimirTabuleiro(); // Exibe o tabuleiro inicial
-
-            int linha = 8; // A última linha da célula vazia
-            int coluna = 8; // A última coluna da célula vazia
-            int numero; // Número que o jogador precisa digitar para resolver o jogo
-            Scanner input = new Scanner(System.in);
-
-            System.out.println("Digite o número para resolver o jogo:");
-            numero = input.nextInt(); // Captura a entrada do jogador para a última célula
-
-            tabuleiroJogador.setNumero(numero); // Define o número que o jogador digitou
-
-            // Verifica se a jogada é correta e atualiza a pontuação
-            if (tabuleiroJogador.realizarJogada(linha, coluna)) {
-                tabuleiro[linha][coluna] = numero; // Preenche a célula final
-                pontuacao = pontuacao(1, 1, pontuacao); // Atualiza a pontuação para teste
-                System.out.println("Pontuação final: " + pontuacao);
-
-                // Atualiza a pontuação no banco de dados
-                JogadorDAO objJogadorDAO = new JogadorDAO();
-                objJogadorDAO.atualizarPontuacao(nome_usuario, pontuacao);
-
-                // Mensagem final
-                JOptionPane.showMessageDialog(this, "Parabéns! Sua pontuação final é: " + pontuacao);
-            }
-
         } else {
             JOptionPane.showMessageDialog(null, "Usuário ou senha inválidos");
         }

@@ -92,7 +92,10 @@ public class frmJogadorVIEW extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos. ");
             return;
         }
-        
+        /*
+        frmLoginVIEW telaLogin = new frmLoginVIEW();
+        telaLogin.setVisible(true);
+        */
         JogadorDTO objjogadordto = new JogadorDTO();
         objjogadordto.setLogin_jogador(login);
         objjogadordto.setSenha_usuario(senha);
@@ -136,6 +139,7 @@ public class frmJogadorVIEW extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new frmJogadorVIEW().setVisible(true);
+                
             }
         });
     }
